@@ -1,0 +1,53 @@
+{
+    "apiVersion": "machinelearning.seldon.io/v1alpha2",
+    "kind": "SeldonDeployment",
+    "metadata": {
+        "labels": {
+            "app": "seldon"
+        },
+        "name": "ceh-seldon-models"
+    },
+    "spec": {
+        "annotations": {
+            "project_name": "ceh",
+            "deployment_version": "0.1"
+        },
+        "name": "ceh-seldon-models",
+        "oauth_key": "oauth-key",
+        "oauth_secret": "oauth-secret",
+        "predictors": [
+            {
+                "componentSpecs": [{
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "ruivieira/ceh-seldon-models",
+                                "imagePullPolicy": "Always",
+                                "name": "ceh-seldon-models",
+                                "resources": {
+                                    "requests": {
+                                        "memory": "10Mi"
+                                    }
+                                }
+                            }
+                        ],
+                        "terminationGracePeriodSeconds": 20
+                    }
+                }],
+                "graph": {
+                    "children": [],
+                    "name": "ceh-seldon-models",
+                    "endpoint": {
+                        "type" : "REST"
+                    },
+                    "type": "MODEL"
+                },
+                "name": "ceh-seldon-models",
+                "replicas": 1,
+                "annotations": {
+                "predictor_version" : "0.1"
+                }
+            }
+        ]
+    }
+}

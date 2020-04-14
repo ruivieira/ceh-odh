@@ -1,0 +1,12 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: ceh-seldon-models
+spec:
+  to:
+    kind: Service
+    name: ceh-seldon-models-ceh-seldon-models
+    weight: 100
+  port:
+    targetPort: http
+  wildcardPolicy: None
