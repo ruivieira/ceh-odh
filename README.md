@@ -48,9 +48,7 @@ And wait before the pods are ready before continuing. You can verify using:
 $ oc get pods
 ```
 
-## Kafka
-
-Strimzi is used to provide Apache Kafka on OpenShift. Start by making a copy of `deploy/crds/opendatahub_v1alpha1_opendatahub_cr.yaml`, e.g.
+Start by making a copy of `deploy/crds/opendatahub_v1alpha1_opendatahub_cr.yaml`, e.g.
 
 ```shell
 $ cp deploy/crds/opendatahub_v1alpha1_opendatahub_cr.yaml ceh-models.yaml
@@ -62,31 +60,6 @@ and edit the following values:
 # Seldon Deployment
 seldon:
   odh_deploy: true
-
-kafka:
-  odh_deploy: true
-  kafka_cluster_name: odh-message-bus
-  kafka_broker_replicas: 3
-  kafka_zookeeper_replicas: 3
-```
-
-Kafka installation requires special setup, the following steps are to configure Kafka. Add your username to the `kafka_admins` list, by editing `deploy/kafka/vars/vars.yaml`:
-
-```yaml
-kafka_admins:
-- admin
-- system:serviceaccount:<PROJECT>:opendatahub-operator
-- <INSERT USERNAME>
-```
-
-You can now deploy Kafka using:
-
-```shell
-$ cd deploy/kafka/
-$ pipenv install
-$ pipenv run ansible-playbook deploy_kafka_operator.yaml \
-  -e kubeconfig=$HOME/.kube/config \
-  -e NAMESPACE=<PROJECT>
 ```
 
 Deploy the ODH custom resource based on the sample template
@@ -225,9 +198,9 @@ From the Openshift console, create a route to the rook service, `rook-ceph-rgw-m
 $ oc expose -n rook-ceph svc/rook-ceph-rgw-my-store
 ```
 
-## Fraud detection model
+## Customer segmentation model
 
-Deploy fraud detection fully trained model by using `deploy/model/eh-seldon-models.json` in this repository:
+Deploy the customer segmentation fully trained model by using `deploy/model/eh-seldon-models.json` in this repository:
 
 ```shell
 $ oc create -n <NAMESPACE> -f deploy/model/ceh-seldon-models.json
