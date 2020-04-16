@@ -1,5 +1,13 @@
 # ceh-odh
 
+- [ceh-odh](#ceh-odh)
+  - [OpenDataHub](#opendatahub)
+  - [Rook / Ceph](#rook--ceph)
+    - [Route](#route)
+  - [Customer segmentation model](#customer-segmentation-model)
+  - [Upload data to Rook-Ceph](#upload-data-to-rook-ceph)
+  - [Notebook](#notebook)
+
 To deploy all the components in OpenShift, the simplest way is to login using oc, e.g.:
 
 ```shell
@@ -252,10 +260,11 @@ Only enter key and secret, leave all other fields as default. Check if connectio
 $ aws s3 ls --endpoint-url <ROOK_CEPH_URL>
 ```
 
-Create a bucket to upload the file:
+Create bucket to upload the data and models, respectively:
 
 ```shell
 $ aws s3api create-bucket --bucket data --endpoint-url <ROOK_CEPH_URL>
+$ aws s3api create-bucket --bucket models --endpoint-url <ROOK_CEPH_URL>
 ```
 
 Download the training dataset `data.csv` file (available [here](https://raw.githubusercontent.com/ruivieira/ceh-seldon-models/master/data/data.csv)) and upload it using:
@@ -265,10 +274,18 @@ $ wget -O data.csv https://raw.githubusercontent.com/ruivieira/ceh-seldon-models
 $ aws s3 cp data.csv s3://data/OPEN/uploaded/data.csv --endpoint-url <ROOK_CEPH_URL> --acl public-read-write
 ```
 
-You can verify the file is uploaded using:
+Upload the initial model to S3:
+
+```shell
+$ wget -O model.pkl https://raw.githubusercontent.com/ruivieira/ceh-odh/master/models/model.pkl
+$ aws s3 cp model.pkl s3://models/uploaded/model.pkl --endpoint-url <ROOK_CEPH_URL> --acl public-read-write
+```
+
+You can verify the files are uploaded using:
 
 ```shell
 $ aws s3 ls s3://data/OPEN/uploaded/ --endpoint-url <ROOK_CEPH_URL>
+$ aws s3 ls s3://models/uploaded/ --endpoint-url <ROOK_CEPH_URL>
 ```
 
 ## Notebook
@@ -278,4 +295,4 @@ Set the following variables S3 credentials as the Base64 encoded previously:
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 
-Set `ENDPOINT_URL` as the exposed Ceph URL previously.
+Set `S3_ENDPOINT_URL` as the exposed Ceph URL previously.
