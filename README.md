@@ -195,7 +195,7 @@ $ oc get secrets -n rook-ceph rook-ceph-object-user-my-store-my-user -o json
 Create a secret in your deployment namespace that includes the secret and key for S3 interface. Make sure to copy the `accesskey` and `secretkey` from the command output above and replace it in the file available in this repo in `deploy/ceph/s3-secretceph.yml.`. Then you should run:
 
 ```shell
-$ oc create -n ccfd -f deploy/ceph/s3-secretceph.yaml
+$ oc create -n <NAMESPACE> -f deploy/ceph/s3-secretceph.yaml
 ```
 
 ### Route
