@@ -6,6 +6,7 @@
     - [Route](#route)
   - [Customer segmentation model](#customer-segmentation-model)
   - [Upload data to Rook-Ceph](#upload-data-to-rook-ceph)
+  - [Deploy model](#deploy-model)
   - [Notebook](#notebook)
 
 To deploy all the components in OpenShift, the simplest way is to login using oc, e.g.:
@@ -286,6 +287,24 @@ You can verify the files are uploaded using:
 ```shell
 $ aws s3 ls s3://data/OPEN/uploaded/ --endpoint-url <ROOK_CEPH_URL>
 $ aws s3 ls s3://models/uploaded/ --endpoint-url <ROOK_CEPH_URL>
+```
+
+## Deploy model
+
+The model can be deployed by first adding the S3 credentials and URL to `deploy/model/ceh-ceph-seldon-model.json`:
+
+```json
+"env" : [
+  {"name": "AWS_ACCESS_KEY_ID",  "value": <ACCESS_KEY>},
+  {"name": "AWS_SECRET_ACCESS_KEY", "value": <SECRET_KEY>},
+  {"name": "S3_ENDPOINT_URL", "value": <ROOK_URL>}
+]
+```
+
+and then running
+
+```shell
+$ oc create -f deploy/model/ceh-ceph-seldon-models.json -n <NAMESPACE>
 ```
 
 ## Notebook

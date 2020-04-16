@@ -1,0 +1,61 @@
+{
+    "apiVersion": "machinelearning.seldon.io/v1alpha2",
+    "kind": "SeldonDeployment",
+    "metadata": {
+        "labels": {
+            "app": "seldon"
+        },
+        "name": "ceh-ceph-seldon-model"
+    },
+    "spec": {
+        "annotations": {
+            "project_name": "ceh",
+            "deployment_version": "0.1"
+        },
+        "name": "ceh-ceh-seldon-model",
+        "oauth_key": "oauth-key",
+        "oauth_secret": "oauth-secret",
+        "predictors": [
+            {
+                "componentSpecs": [{
+                    "spec": {
+                        "containers": [
+                            {
+                                "image": "ruivieira/ceh-ceph-seldon-model",
+                                "imagePullPolicy": "Always",
+                                "name": "ceh-ceph-seldon-model",
+                                "resources": {
+                                    "requests": {
+                                        "memory": "10Mi"
+                                    }
+                                },
+                                "env" : [
+                                    {"name": "AWS_ACCESS_KEY_ID", 
+                                     "value": <ACCESS_KEY>},
+                                     {"name": "AWS_SECRET_ACCESS_KEY", 
+                                    "value": <SECRET_KEY>},
+                                    {"name": "S3_ENDPOINT_URL",
+                                     "value": <ROOK_URL>}
+                                ]
+                            }
+                        ],
+                        "terminationGracePeriodSeconds": 20
+                    }
+                }],
+                "graph": {
+                    "children": [],
+                    "name": "ceh-ceph-seldon-model",
+                    "endpoint": {
+                        "type" : "REST"
+                    },
+                    "type": "MODEL"
+                },
+                "name": "ceh-ceph-seldon-model",
+                "replicas": 1,
+                "annotations": {
+                "predictor_version" : "0.1"
+                }
+            }
+        ]
+    }
+}
