@@ -9,8 +9,10 @@
     },
     "spec": {
         "annotations": {
-            "project_name": "ceh",
-            "deployment_version": "0.1"
+            "deployment_version": "0.1",
+            "prometheus.io/scrape": "true",
+            "prometheus.io/path": "/prometheus",
+            "prometheus.io/port": "8000"
         },
         "name": "ceh-ceh-seldon-model",
         "oauth_key": "oauth-key",
