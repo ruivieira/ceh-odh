@@ -4,7 +4,6 @@
   - [OpenDataHub](#opendatahub)
   - [Rook / Ceph](#rook--ceph)
     - [Route](#route)
-  - [Customer segmentation model](#customer-segmentation-model)
   - [Upload data to Rook-Ceph](#upload-data-to-rook-ceph)
   - [Deploy model](#deploy-model)
   - [Notebook](#notebook)
@@ -207,38 +206,6 @@ From the Openshift console, create a route to the rook service, `rook-ceph-rgw-m
 $ oc expose -n rook-ceph svc/rook-ceph-rgw-my-store
 ```
 
-## Customer segmentation model
-
-Deploy the customer segmentation fully trained model by using `deploy/model/eh-seldon-models.json` in this repository:
-
-```shell
-$ oc create -n <NAMESPACE> -f deploy/model/ceh-seldon-models.json
-```
-
-Check and make sure the model is created, this step will take a couple of minutes.
-
-```shell
-$ oc get seldondeployments
-$ oc get pods
-```
-
-Create a route to the model by using `deploy/model/ceh-seldon-models-route.yaml` in this repo:
-
-```shell
-$ oc create -n <NAMESPACE> -f deploy/model/ceh-seldon-models-route.yaml
-```
-
-Enable Prometheus metric scraping by editing `ceh-seldon-models-ceh-seldon-models` service from the portal and adding these two lines under annotations:
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-annotations:
-    prometheus.io/path: /prometheus
-    prometheus.io/scrape: 'true'
-```
-
 ## Upload data to Rook-Ceph
 
 Make sure to decode the key and secret copied from the rook installation by using the following commands:
@@ -291,7 +258,8 @@ $ aws s3 ls s3://models/uploaded/ --endpoint-url <ROOK_CEPH_URL>
 
 ## Deploy model
 
-The model can be deployed by first adding the S3 credentials and URL to `deploy/model/ceh-ceph-seldon-model.json`:
+The model can be deployed by first adding the S3 credentials and URL to `deploy/model/ceh-ceph-seldon-model.json`,
+such as:
 
 ```json
 "env" : [
@@ -305,6 +273,21 @@ and then running
 
 ```shell
 $ oc create -f deploy/model/ceh-ceph-seldon-models.json -n <NAMESPACE>
+```
+
+Check and make sure the model is created, this step will take a couple of minutes.
+
+```shell
+$ oc get seldondeployments
+$ oc get pods
+```
+
+Enable Prometheus metric scraping by editing `ceh-seldon-models-ceh-seldon-models` service from the portal and adding these annotations:
+
+```yaml
+prometheus.io/path: /prometheus
+prometheus.io/scrape: 'true'
+prometheus.io/scrape: '8000'
 ```
 
 ## Notebook
